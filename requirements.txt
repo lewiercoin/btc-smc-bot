@@ -1,0 +1,30 @@
+# btc-smc-bot requirements
+# Merged from smc-signal-bot + btc-bot; only what is actually used
+
+# HTTP / API
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# Binance Futures (from btc-bot)
+# (uses raw requests via rest_client.py — no CCXT needed in phase 1)
+
+# SMC Signal Bot dependencies
+oandapyV20>=0.7.2            # kept for potential future OANDA fallback
+structlog>=24.1.0
+
+# Telegram
+python-telegram-bot>=20.7
+
+# Scheduling
+APScheduler>=3.10.4
+
+# News scraping (fallback)
+beautifulsoup4>=4.12.3
+lxml>=5.1.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.5
+
+# Code quality (optional, dev only)
+# ruff>=0.3.0
