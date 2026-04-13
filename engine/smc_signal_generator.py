@@ -37,27 +37,28 @@ class SignalGenerator:
     def _get_current_snapshot(self) -> Dict[str, Any]:
         '''PEŁNY snapshot H1 dla detektorów SMC – tylko lokalnie'''
         try:
-            candles = self.binance_client.get_klines(
-                symbol="BTCUSDT",
-                interval="1h",
-                limit=100
+            candles = self.binance_client.get_candles(
+                instrument="BTCUSDT",
+                granularity="1h",
+                count=100
             )
             
             if not candles or len(candles) < 5:
                 raise ValueError("Brak danych z Binance")
 
-            current_price = float(candles[-1][4])
-            timestamp = int(candles[-1][0] / 1000)
+            current_candle = candles[-1]
+            current_price = current_candle.close
+            timestamp = int(current_candle.timestamp)
 
             snapshot = {
                 "timestamp": timestamp,
                 "current_price": current_price,
                 "candles": candles,
-                "open": float(candles[-1][1]),
-                "high": float(candles[-1][2]),
-                "low": float(candles[-1][3]),
+                "open": current_candle.open,
+                "high": current_candle.high,
+                "low": current_candle.low,
                 "close": current_price,
-                "volume": float(candles[-1][5]),
+                "volume": current_candle.volume,
                 "symbol": "BTCUSDT",
                 "interval": "1h"
             }
