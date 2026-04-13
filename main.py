@@ -34,7 +34,7 @@ def _setup_signal_generator(mode: str):
     from connectors.binance_client import BinanceClient
     from connectors.news_client import NewsClient
     from db.database import Database
-    from engine.signal_generator import SignalGenerator
+    from engine.smc_signal_generator import SignalGenerator
 
     db = Database(db_path=os.getenv("DB_PATH", "btc_smc.db"))
     db.initialize()
