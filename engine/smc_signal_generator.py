@@ -15,11 +15,8 @@ class SignalGenerator:
         max_leverage: int = 3,
         **kwargs
     ):
-        # Tworzymy config SMC-only
-        self.config = FeatureEngineConfig(
-            confluence_min_for_bias=float(confluence_threshold),
-            confluence_min_for_entry=float(confluence_threshold),  # tymczasowo 65.0 dla testu
-        )
+        # Tworzymy config SMC-only - używamy domyślnych wartości z FeatureEngineConfig
+        self.config = FeatureEngineConfig()
         
         self.smc_engine = SMCSignalEngine(self.config)
         self.binance_client = binance_client
