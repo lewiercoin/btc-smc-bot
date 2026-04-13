@@ -12,7 +12,7 @@ class FeatureEngineConfig:
     
     # === THRESHOLDS ===
     confluence_min_for_bias: float = 65.0      # 0-100
-    confluence_min_for_entry: float = 82.0
+    confluence_min_for_entry: float = 65.0
     
     # === FILTERS ===
     use_session_filter: bool = True
