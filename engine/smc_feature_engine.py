@@ -73,8 +73,8 @@ class SMCFeatureEngine:
         structure = None
         if 'structure' in self.detectors and swings:
             structure = self.detectors['structure'].analyze(swings)
-            features['structure_score'] = 0.7 if structure and (structure.bos or structure.choch) else 0.0
-            features['bos_choch'] = 'BOS' if structure and structure.bos else 'CHOCH' if structure and structure.choch else None
+            features['structure_score'] = 0.7 if structure and (structure.last_bos or structure.last_choch) else 0.0
+            features['bos_choch'] = 'BOS' if structure and structure.last_bos else 'CHOCH' if structure and structure.last_choch else None
         else:
             features['structure_score'] = 0.0
             features['bos_choch'] = None
@@ -92,7 +92,7 @@ class SMCFeatureEngine:
         if 'fvg' in self.detectors:
             fvg_list = self.detectors['fvg'].detect(candles, structure)
             features['fvg_score'] = min(1.0, len(fvg_list) * 0.4) if fvg_list else 0.0
-            features['fvg_type'] = 'bullish' if fvg_list and fvg_list[0].direction == 'bullish' else 'bearish' if fvg_list else None
+            features['fvg_type'] = fvg_list[0].fvg_type if fvg_list else None
         else:
             features['fvg_score'] = 0.0
             features['fvg_type'] = None
@@ -101,7 +101,7 @@ class SMCFeatureEngine:
         if 'liquidity' in self.detectors and swings:
             sweep_list = self.detectors['liquidity'].detect(candles, swings)
             features['liquidity_sweep_score'] = min(1.0, len(sweep_list) * 0.35) if sweep_list else 0.0
-            features['sweep_reclaimed'] = len(sweep_list) > 0 and any(sweep.reclaimed for sweep in sweep_list)
+            features['sweep_reclaimed'] = False  # TODO: implement reclaim logic
         else:
             features['liquidity_sweep_score'] = 0.0
             features['sweep_reclaimed'] = False
