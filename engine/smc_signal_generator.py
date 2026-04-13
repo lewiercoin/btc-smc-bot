@@ -1,6 +1,7 @@
 from typing import Dict, Any, List
 from engine.smc_signal_engine import SMCSignalEngine
 from engine.config.feature_engine_config import FeatureEngineConfig
+import time
 
 class SignalGenerator:
     '''Drop-in replacement dla starego SignalGenerator – używa czystej SMC-only'''
@@ -34,10 +35,38 @@ class SignalGenerator:
         return self.smc_engine.generate_signals(snapshot)
 
     def _get_current_snapshot(self) -> Dict[str, Any]:
-        '''Pobiera aktualny snapshot z Binance (minimalna implementacja)'''
-        # TODO: w następnym handoffie rozwiniesz do pełnego snapshotu
-        # na razie placeholder – zwróci pusty dict (testowy)
-        return {'timestamp': None}
+        '''PEŁNY snapshot H1 dla detektorów SMC – tylko lokalnie'''
+        try:
+            candles = self.binance_client.get_klines(
+                symbol="BTCUSDT",
+                interval="1h",
+                limit=100
+            )
+            
+            if not candles or len(candles) < 5:
+                raise ValueError("Brak danych z Binance")
+
+            current_price = float(candles[-1][4])
+            timestamp = int(candles[-1][0] / 1000)
+
+            snapshot = {
+                "timestamp": timestamp,
+                "current_price": current_price,
+                "candles": candles,
+                "open": float(candles[-1][1]),
+                "high": float(candles[-1][2]),
+                "low": float(candles[-1][3]),
+                "close": current_price,
+                "volume": float(candles[-1][5]),
+                "symbol": "BTCUSDT",
+                "interval": "1h"
+            }
+            print(f"✅ Snapshot H1 pobrany lokalnie – {len(candles)} świec | cena: {current_price:.2f}")
+            return snapshot
+
+        except Exception as e:
+            print(f"⚠️ Błąd snapshotu (lokalny): {e}")
+            return {"timestamp": int(time.time()), "error": str(e)}
 
     def get_bias(self, snapshot: Dict[str, Any] = None) -> str:
         if snapshot is None:
