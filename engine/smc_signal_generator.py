@@ -18,7 +18,7 @@ class SignalGenerator:
         # Tworzymy config SMC-only
         self.config = FeatureEngineConfig(
             confluence_min_for_bias=float(confluence_threshold),
-            confluence_min_for_entry=float(confluence_threshold) + 17,  # 82 jak w Phase 2
+            confluence_min_for_entry=float(confluence_threshold),  # tymczasowo 65.0 dla testu
         )
         
         self.smc_engine = SMCSignalEngine(self.config)
