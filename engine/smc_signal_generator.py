@@ -48,7 +48,7 @@ class SignalGenerator:
 
             current_candle = candles[-1]
             current_price = current_candle.close
-            timestamp = int(current_candle.timestamp)
+            timestamp = int(current_candle.timestamp.timestamp())
 
             snapshot = {
                 "timestamp": timestamp,
